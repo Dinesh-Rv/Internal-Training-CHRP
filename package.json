@@ -4,12 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --watch src --exec ts-node src/app.ts",
+    "dev": "nodemon src/server.ts",
     "build": "tsc",
-    "start": "node dist/app.js",
-    "lint": "eslint . --ext .ts",
-    "format": "prettier --write .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node dist/server.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest",
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
@@ -24,23 +25,33 @@
   },
   "homepage": "https://github.com/Dinesh-Rv/Internal-Training-CHRP#readme",
   "dependencies": {
-    "dotenv": "^17.0.0",
+    "dotenv": "^17.0.1",
     "express": "^5.1.0",
     "pg": "^8.16.3",
-    "pg-hstore": "^2.3.4",
-    "sequelize": "^6.37.7"
+    "sequelize": "^6.37.7",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "winston": "^3.17.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",
-    "@types/node": "^24.0.8",
-    "@typescript-eslint/eslint-plugin": "^8.35.1",
-    "@typescript-eslint/parser": "^8.35.1",
-    "eslint": "^9.30.0",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.0.10",
+    "@types/sequelize": "^4.28.20",
+    "@types/supertest": "^6.0.3",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.8",
+    "eslint": "^9.30.1",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.5.1",
+    "globals": "^16.3.0",
+    "jest": "^30.0.4",
     "nodemon": "^3.1.10",
     "prettier": "^3.6.2",
+    "supertest": "^7.1.1",
+    "ts-jest": "^29.4.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.35.1"
   }
 }

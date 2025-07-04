@@ -1,46 +1,56 @@
 import { DataTypes, Model, Optional } from 'sequelize';
-import database from '../config/database';
+import sequelize from '../../config/database';
 
-export interface ICategory {
-  id?: number;
+interface CategoryAttributes {
+  id: number;
   name: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-  deletedAt?: Date | null;
+  description?: string;
+  isActive: boolean;
+  isDeleted: boolean;
 }
 
-interface CategoryCreationAttributes extends Optional<ICategory, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'> {}
-
-export class Category extends Model<ICategory, CategoryCreationAttributes> implements ICategory {
+class Category extends Model<CategoryAttributes, Optional<CategoryAttributes, 'id' | 'description' | 'isActive' | 'isDeleted'>> implements CategoryAttributes {
   public id!: number;
   public name!: string;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
-  public readonly deletedAt!: Date | null;
+  public description?: string;
+  public isActive!: boolean;
+  public isDeleted!: boolean;
 }
 
 Category.init(
   {
     id: {
-      type: DataTypes.INTEGER.UNSIGNED,
+      type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
+      unique: true,
     },
     name: {
-      type: DataTypes.STRING(100),
+      type: DataTypes.STRING,
       allowNull: false,
       unique: true,
-      validate: {
-        notEmpty: true,
-        len: [2, 100],
-      },
+    },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    isActive: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
+    },
+    isDeleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
     },
   },
   {
-    sequelize: database.getSequelize(),
+    sequelize,
     modelName: 'Category',
     tableName: 'categories',
     timestamps: true,
-    paranoid: true,
-  },
-); 
+  }
+);
+
+export default Category;
