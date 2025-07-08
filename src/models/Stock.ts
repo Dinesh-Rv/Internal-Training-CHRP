@@ -1,58 +1,48 @@
 import { DataTypes, Model, Optional } from 'sequelize';
-import database from '../config/database';
-import { Product } from './Product';
+import sequelize from '../../config/database';
+import Product from './Product';
 
-export interface IStock {
-  id?: number;
+interface StockAttributes {
+  id: number;
   productId: number;
   quantity: number;
-  createdAt?: Date;
-  updatedAt?: Date;
-  deletedAt?: Date | null;
 }
 
-interface StockCreationAttributes extends Optional<IStock, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'> {}
-
-export class Stock extends Model<IStock, StockCreationAttributes> implements IStock {
+class Stock extends Model<StockAttributes, Optional<StockAttributes, 'id'>> implements StockAttributes {
   public id!: number;
   public productId!: number;
   public quantity!: number;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
-  public readonly deletedAt!: Date | null;
 }
 
 Stock.init(
   {
     id: {
-      type: DataTypes.INTEGER.UNSIGNED,
+      type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
+      unique: true,
     },
     productId: {
-      type: DataTypes.INTEGER.UNSIGNED,
+      type: DataTypes.INTEGER,
       allowNull: false,
-      references: {
-        model: 'products',
-        key: 'id',
-      },
+      references: { model: 'products', key: 'id' },
+      onDelete: 'CASCADE',
     },
     quantity: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      validate: {
-        min: 0,
-        isInt: true,
-      },
+      defaultValue: 0,
     },
   },
   {
-    sequelize: database.getSequelize(),
+    sequelize,
     modelName: 'Stock',
     tableName: 'stocks',
     timestamps: true,
-    paranoid: true,
-  },
+  }
 );
 
-Stock.belongsTo(Product, { foreignKey: 'productId', as: 'product' }); 
+Stock.belongsTo(Product, { foreignKey: 'productId', as: 'product' });
+Product.hasOne(Stock, { foreignKey: 'productId', as: 'stock' });
+
+export default Stock; 

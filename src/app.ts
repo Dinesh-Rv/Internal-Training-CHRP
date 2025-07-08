@@ -1,30 +1,28 @@
 import express from 'express';
-import dotenv from 'dotenv';
-import database from './config/database';
-
-dotenv.config();
+import categoryRoutes from './routes/categoryRoutes';
+import productRoutes from './routes/productRoutes';
+import stockRoutes from './routes/stockRoutes';
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from './swagger';
+import logger from './utils/logger';
 
 const app = express();
-
 app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.send('Stock Management System API');
+// Winston logger middleware
+app.use((req, res, next) => {
+  logger.info(`Incoming request: ${req.method} ${req.url}`);
+  next();
 });
 
-const PORT = process.env.PORT || 3000;
+app.use('/api/categories', categoryRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/stocks', stockRoutes);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-async function startServer() {
-  try {
-    await database.testConnection();
-    await database.sync();
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-    });
-  } catch (error) {
-    console.error('Failed to start server:', error);
-    process.exit(1);
-  }
-}
+app.get('/', (req, res) => {
+  res.send('Product Management System API');
+});
 
-startServer();
+export default app;
+

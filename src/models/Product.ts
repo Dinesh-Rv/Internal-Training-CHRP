@@ -1,69 +1,73 @@
 import { DataTypes, Model, Optional } from 'sequelize';
-import database from '../config/database';
-import { Category } from './Category';
+import sequelize from '../../config/database';
+import Category from './Category';
 
-export interface IProduct {
-  id?: number;
+interface ProductAttributes {
+  id: number;
   name: string;
+  description?: string;
   price: number;
   categoryId: number;
-  createdAt?: Date;
-  updatedAt?: Date;
-  deletedAt?: Date | null;
+  isActive: boolean;
+  isDeleted: boolean;
 }
 
-interface ProductCreationAttributes extends Optional<IProduct, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'> {}
-
-export class Product extends Model<IProduct, ProductCreationAttributes> implements IProduct {
+class Product extends Model<ProductAttributes, Optional<ProductAttributes, 'id' | 'description' | 'isActive' | 'isDeleted'>> implements ProductAttributes {
   public id!: number;
   public name!: string;
+  public description?: string;
   public price!: number;
   public categoryId!: number;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
-  public readonly deletedAt!: Date | null;
+  public isActive!: boolean;
+  public isDeleted!: boolean;
 }
 
 Product.init(
   {
     id: {
-      type: DataTypes.INTEGER.UNSIGNED,
+      type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
+      unique: true,
     },
     name: {
-      type: DataTypes.STRING(100),
+      type: DataTypes.STRING,
       allowNull: false,
-      validate: {
-        notEmpty: true,
-        len: [2, 100],
-      },
+    },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     price: {
-      type: DataTypes.DECIMAL(10, 2),
+      type: DataTypes.FLOAT,
       allowNull: false,
-      validate: {
-        isDecimal: true,
-        min: 0,
-      },
     },
     categoryId: {
-      type: DataTypes.INTEGER.UNSIGNED,
+      type: DataTypes.INTEGER,
       allowNull: false,
-      references: {
-        model: 'categories',
-        key: 'id',
-      },
+      references: { model: 'categories', key: 'id' },
+      onDelete: 'CASCADE',
+    },
+    isActive: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
+    },
+    isDeleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
     },
   },
   {
-    sequelize: database.getSequelize(),
+    sequelize,
     modelName: 'Product',
     tableName: 'products',
     timestamps: true,
-    paranoid: true,
-  },
+  }
 );
 
 Product.belongsTo(Category, { foreignKey: 'categoryId', as: 'category' });
-Category.hasMany(Product, { foreignKey: 'categoryId', as: 'products' }); 
+Category.hasMany(Product, { foreignKey: 'categoryId', as: 'products' });
+
+export default Product; 
