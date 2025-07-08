@@ -1,5 +1,7 @@
 import express from 'express';
 import categoryRoutes from './routes/categoryRoutes';
+import productRoutes from './routes/productRoutes';
+import stockRoutes from './routes/stockRoutes';
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './swagger';
 import logger from './utils/logger';
@@ -14,6 +16,8 @@ app.use((req, res, next) => {
 });
 
 app.use('/api/categories', categoryRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/stocks', stockRoutes);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.get('/', (req, res) => {

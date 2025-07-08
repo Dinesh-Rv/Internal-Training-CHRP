@@ -10,7 +10,7 @@ export const createCategory: RequestHandler = async (req, res) => {
       return;
     }
     const category = await CategoryService.createCategory({ name, description, isActive });
-    logger.info('Category created: %o', category);
+    logger.info('Category created: %o', category.name);
     res.status(201).json(category);
   } catch (error) {
     logger.error('Error creating category: %o', error);

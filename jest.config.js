@@ -2,6 +2,8 @@ const { createDefaultPreset } = require("ts-jest");
 
 const tsJestTransformCfg = createDefaultPreset().transform;
 
+const coverageFileOutput = process.env.ENABLE_COVERAGE_FILE_OUTPUT === 'true';
+
 /** @type {import("jest").Config} **/
 module.exports = {
   preset: 'ts-jest',
@@ -17,6 +19,7 @@ module.exports = {
     'src/models/**/*.{ts,js}',
     'src/routes/**/*.{ts,js}',
     'src/services/**/*.{ts,js}',
+    'src/Repositories/**/*.{ts,js}',
     '!**/node_modules/**',
     '!**/dist/**',
   ],

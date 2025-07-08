@@ -1,4 +1,4 @@
-import Category from '../models/Category';
+import CategoryRepository from '../Repositories/CategoryRepository';
 
 export class CategoryService {
   static async createCategory(data: {
@@ -7,28 +7,28 @@ export class CategoryService {
     isActive?: boolean;
     isDeleted?: boolean;
   }) {
-    return Category.create(data);
+    return CategoryRepository.create(data);
   }
 
   static async getAllCategories() {
-    return Category.findAll({ where: { isDeleted: false } });
+    return CategoryRepository.findAll();
   }
 
   static async getCategoryById(id: number) {
-    return Category.findOne({ where: { id, isDeleted: false } });
+    return CategoryRepository.findById(id);
   }
 
   static async updateCategory(id: number, data: Partial<{ name: string; description?: string; isActive?: boolean; isDeleted?: boolean; }>) {
-    const category = await Category.findByPk(id);
+    const category = await CategoryRepository.findByPk(id);
     if (!category || category.isDeleted) return null;
-    await category.update(data);
+    await CategoryRepository.update(category, data);
     return category;
   }
 
   static async deleteCategory(id: number) {
-    const category = await Category.findByPk(id);
+    const category = await CategoryRepository.findByPk(id);
     if (!category || category.isDeleted) return null;
-    await category.update({ isDeleted: true });
+    await CategoryRepository.update(category, { isDeleted: true });
     return category;
   }
 }

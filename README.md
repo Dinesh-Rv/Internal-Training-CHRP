@@ -89,29 +89,6 @@ Refer to the `.env.example` file for required environment variables and create y
   npx prettier --write .
   ```
 
-## Project Structure
-```
-├── src
-│   ├── app.ts
-│   ├── server.ts
-│   ├── controllers/
-│   ├── services/
-│   ├── models/
-│   ├── routes/
-│   └── swagger.ts
-├── config/
-│   └── database.ts
-├── utils/
-│   └── dbInit.ts
-├── tests/
-│   └── categoryService.test.ts
-├── .env
-├── .eslintrc / eslint.config.mjs
-├── .prettierrc
-├── package.json
-└── README.md
-```
-
 ## Swagger Documentation
 - Visit [http://localhost:3000/api-docs](http://localhost:3000/api-docs) for interactive API docs.
 - Endpoints are documented using OpenAPI/Swagger JSDoc comments in the route files.
